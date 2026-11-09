@@ -90,6 +90,14 @@ button{cursor:pointer}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .flash{animation:flash .9s ease}
 @keyframes flash{30%{background:var(--amber-tint)}}
+/* battery */
+.batt{display:inline-flex;align-items:center;gap:6px;font-size:13px;line-height:1;margin-top:2px}
+.batt svg{width:28px;height:14px;flex:none}
+.batt b{font-variant-numeric:tabular-nums}
+.batt.ok{color:var(--teal-ink)}.batt.mid{color:var(--amber)}.batt.low{color:var(--red)}
+.batt em{font-style:normal;font-weight:700;font-size:11px;padding:2px 6px;border-radius:99px;background:var(--red-tint);color:var(--red)}
+.batt-row{padding-top:8px;border-top:1px solid var(--line);margin-top:6px}
+.dev .batt{margin-top:4px}
 /* help */
 .tw{position:relative;min-width:0}.tw .tile{width:100%;height:100%}
 .qm{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--teal-ink);font:700 17px/1 var(--f-display);display:grid;place-items:center;cursor:pointer;padding:0;z-index:2}

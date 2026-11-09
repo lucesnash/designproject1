@@ -16,6 +16,15 @@ function tickBars(){if(!barSets.size){clearInterval(barTimer);barTimer=null;retu
   barSets.forEach(b=>{b.fills.forEach((f,i)=>{b.cur[i]+=(b.tgt[i]-b.cur[i])*.4+(RM?0:rnd(-2.2,2.2));b.cur[i]=Math.max(3,Math.min(98,b.cur[i]));f.style.height=b.cur[i]+'%'})})}
 const IDLE=()=>Array.from({length:10},()=>rnd(10,22));
 
+/* ---------- battery ---------- */
+/* Glove battery level. In the real band the hub reports both levels over BLE (the spoke sends its level to the hub over ESP-NOW). Here it is simulated and drains slowly. */
+const battCls=p=>p<=20?'low':p<=50?'mid':'ok';
+function battHTML(p){const w=Math.max(1,Math.round(18*p/100)),c=battCls(p);
+  return `<span class="batt ${c}" role="img" aria-label="Battery ${p} percent${p<=20?', low':''}"><svg viewBox="0 0 28 14" aria-hidden="true"><rect x=".75" y=".75" width="23.5" height="12.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="25" y="4.5" width="2.5" height="5" rx="1" fill="currentColor"/><rect x="3" y="3" width="${w}" height="8" rx="1.5" fill="currentColor"/></svg><b>${p}%</b>${p<=20?'<em>Low</em>':''}</span>`}
+function refreshBatt(){$$('[data-batt]').forEach(e=>{e.innerHTML=battHTML(state.batt[e.dataset.batt])})}
+let battT=null;
+function startBatt(){if(battT)return;battT=setInterval(()=>{if(!state.paired)return;const o=state.batt,n={L:Math.max(1,o.L-1),R:Math.max(1,o.R-1)};state.batt=n;refreshBatt();
+  [['L','Left Spoke'],['R','Right Hub']].forEach(([k,nm])=>{if(o[k]>20&&n[k]<=20)toast(nm+' Glove battery is low ('+n[k]+'%). Please charge it soon.')})},30000)}
 
 const stepsHTML=(n,i,names)=>`<div class="steps" aria-hidden="true">${Array.from({length:n},(_,j)=>`<i class="${j<i?'done':j===i?'cur':''}"></i>`).join('')}</div><div class="stepname"><span>Step ${Math.min(i+1,n)} of ${n}</span><span>${names[Math.min(i,n-1)]}</span></div>`;
 

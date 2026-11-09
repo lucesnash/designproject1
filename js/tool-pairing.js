@@ -6,7 +6,7 @@ function pairSigner(){openModal('Pairing & onboarding','Pair your gloves',(root,
   const gc=(t,sub,on)=>`<div class="glove-card ${on?'on':''}"><span class="gi">${icon('hand')}</span><div><b>${t}</b><br><small class="muted">${sub}</small></div><span class="pill ${on?'ok':'warn'}"><i></i>${on?'Linked':'Waiting'}</span></div>`;
   function draw(){
     if(st===4){root.innerHTML=`<div class="status ok">${icon('check','sm')} Both gloves are paired and working</div>
-      <div class="list">${gc('Left Spoke Glove','ESP-NOW link to the hub · battery 82% · 5 flex + IMU',true)}<div class="link-line"><i></i>ESP-NOW · encrypted<i></i></div>${gc('Right Hub Glove','Bluetooth LE to this phone · battery 74% · model v'+state.modelVer+' (INT8)',true)}</div>
+      <div class="list">${gc('Left Spoke Glove','ESP-NOW link to the hub · 5 flex + IMU<br><span data-batt="L">'+battHTML(state.batt.L)+'</span>',true)}<div class="link-line"><i></i>ESP-NOW · encrypted<i></i></div>${gc('Right Hub Glove','Bluetooth LE to this phone · model v'+state.modelVer+' (INT8)<br><span data-batt="R">'+battHTML(state.batt.R)+'</span>',true)}</div>
       <div class="note">${icon('users','sm')}<span>Share this code with your conversation partner so their phone can join: <b style="font-size:18px;color:var(--ink);letter-spacing:.1em">SECB-4829</b></span></div>
       <div class="cta-row"><button class="btn" id="bz-l">${icon('vib','sm')}Buzz left</button><button class="btn" id="bz-r">${icon('vib','sm')}Buzz right</button></div>
       <div class="cta-row"><button class="btn" id="unpair">Unpair and set up again</button><button class="btn primary" id="to-cal">Next: Calibration</button></div>`;
@@ -25,7 +25,7 @@ function pairSigner(){openModal('Pairing & onboarding','Pair your gloves',(root,
     if(st===2){let p=0;const msgs=['Searching','Handshake','Encrypting'];api.every(()=>{p+=8;const m=$('#lk-m');if(!m)return;m.style.width=Math.min(100,p)+'%';$('#lk-l').textContent=msgs[Math.min(2,Math.floor(p/36))];if(p>=100){clearInterval(api._);}},150);
       api.later(()=>{if($('#lk-s')){$('#lk-s').textContent='Linked · packet loss 0.4%';st=3;api.later(draw,900)}},1900)}
     if(st===3){$$('[data-bz]').forEach(b=>b.onclick=()=>{const h=b.dataset.bz;toast((h==='L'?'Left':'Right')+' glove buzzed');const ok=$(`[data-ok="${h}"]`);ok.disabled=false});
-      $$('[data-ok]').forEach(b=>b.onclick=()=>{felt[b.dataset.ok]=true;draw()});$('#fin').onclick=()=>{state.paired=true;st=4;draw();renderTiles();renderLive();toast('Gloves paired')}}
+      $$('[data-ok]').forEach(b=>b.onclick=()=>{felt[b.dataset.ok]=true;draw()});$('#fin').onclick=()=>{state.paired=true;state.batt={L:82,R:74};st=4;draw();renderTiles();renderLive();toast('Gloves paired')}}
   }draw()})}
 
 /* ===== Pairing (partner) ===== */

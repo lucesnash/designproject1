@@ -8,11 +8,11 @@ function tileStatus(k){const s=state.mode==='signer';
   return ['','Sample data','Accuracy, confidence and session summaries']}
 function renderTiles(){const s=state.mode==='signer';
   const defs=[['pair','ble','Pairing & Onboarding'],['cal','cal','Calibration'],['per','person','Personalization'],['ana','chart','Data Analytics']];
-  let nextK=null;if(s){if(!state.paired)nextK='pair';else if(!state.calibrated)nextK='cal'}else{if(!state.joined)nextK='pair';else if(!state.voiceCal)nextK='cal'}
+  startBatt();let nextK=null;if(s){if(!state.paired)nextK='pair';else if(!state.calibrated)nextK='cal'}else{if(!state.joined)nextK='pair';else if(!state.voiceCal)nextK='cal'}
   $('#tiles').innerHTML=defs.map(([k,ic,t])=>{const [c,l,d]=tileStatus(k);return `<div class="tw"><button class="tile${k===nextK?' next':''}" data-tile="${k}"><span class="ti">${icon(ic)}</span><h3>${t}</h3><small>${d}</small><span class="pill ${c}"><i></i>${l}</span></button><button class="qm" type="button" data-help="${k}" aria-label="What is ${t}?">?</button></div>`}).join('');
   $$('.tile').forEach(b=>b.onclick=()=>openTool(b.dataset.tile));
   const dv=$('#devices');const Q=k=>`<button class="qm sm" type="button" data-help="${k}" aria-label="What is this?">?</button>`;
-  if(s)dv.innerHTML=`<div class="dev"><b><span class="dot ${state.paired?'on':''}"></span>Left Spoke Glove${Q('dev_L')}</b><small>${state.paired?'ESP-NOW to hub · 82%':'Not paired'}</small></div><div class="dev"><b><span class="dot ${state.paired?'on':''}"></span>Right Hub Glove${Q('dev_R')}</b><small>${state.paired?'Bluetooth LE · 74%':'Not paired'}</small></div>`;
+  if(s)dv.innerHTML=`<div class="dev"><b><span class="dot ${state.paired?'on':''}"></span>Left Spoke Glove${Q('dev_L')}</b><small>${state.paired?'ESP-NOW to hub':'Not paired'}</small>${state.paired?`<span data-batt="L">${battHTML(state.batt.L)}</span>`:''}</div><div class="dev"><b><span class="dot ${state.paired?'on':''}"></span>Right Hub Glove${Q('dev_R')}</b><small>${state.paired?'Bluetooth LE to phone':'Not paired'}</small>${state.paired?`<span data-batt="R">${battHTML(state.batt.R)}</span>`:''}</div>`;
   else dv.innerHTML=`<div class="dev"><b><span class="dot ${state.joined?'on':''}"></span>Session${Q('dev_S')}</b><small>${state.joined?'SECB-4829 · joined':'Not joined'}</small></div><div class="dev"><b><span class="dot ${state.mic?'on':''}"></span>Microphone${Q('dev_M')}</b><small>${state.mic?'Ready':'Not checked'}</small></div>`;
   $$('[data-help]').forEach(b=>b.onclick=e=>{e.stopPropagation();openHelp(b.dataset.help,b)})}
 function renderDash(){const s=state.mode==='signer';

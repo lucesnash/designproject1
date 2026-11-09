@@ -16,10 +16,10 @@ const Session={
   clear(){try{sessionStorage.removeItem('secb.session')}catch(e){}}
 };
 
-const PERSIST=['paired','joined','mic','calibrated','accuracy','voiceCal','cal','corrections','queued','modelVer','threshold','hold','speed','ttsOn','ttsRate','sens','msgScale','voice','lang','micSim','sl'];
+const PERSIST=['paired','joined','mic','calibrated','accuracy','voiceCal','cal','corrections','queued','modelVer','threshold','hold','speed','ttsOn','ttsRate','sens','msgScale','voice','lang','micSim','sl','batt'];
 
 const state=(()=>{
-  const defaults={user:'Maria',mode:null,paired:false,joined:false,mic:false,calibrated:false,voiceCal:false,voice:null,lang:'auto',sl:'asl',micSim:false,accuracy:null,
+  const defaults={user:'Maria',mode:null,paired:false,joined:false,mic:false,calibrated:false,voiceCal:false,voice:null,lang:'auto',batt:{L:82,R:74},sl:'asl',micSim:false,accuracy:null,
     corrections:0,queued:3,modelVer:'1.3',threshold:70,hold:0.6,speed:50,ttsOn:false,ttsRate:1,sens:'Medium',
     convo:[],busy:false,demo:null,draft:'',lineIdx:0,sigIdx:0,vocIdx:0};
   const saved=Store.get('profile.'+(Session.get().id||'guest'),{});
